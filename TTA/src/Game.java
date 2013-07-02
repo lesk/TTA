@@ -12,17 +12,19 @@ public class Game {
 		Player player2 = new Player(2);
 		Player player3 = new Player(3);
 		Player player4 = new Player(4);
+		
+		CardRow cr = new CardRow(4);
 
 		// while cards available
-		for (int i=0; i< 50; i++){
-			// refill card row
+		for (int i=0; i< 9; i++){
 			player1.doTurn();
-			// refill card row
+			cr.refill(); 
 			player2.doTurn();
-			// refill card row
+			cr.refill(); 
 			player3.doTurn();
-			// refill card row
+			cr.refill(); 
 			player4.doTurn();
+			cr.refill(); 
 		}
 
 		player1.doTurn();

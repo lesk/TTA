@@ -12,8 +12,8 @@ public class Player {
 	
 	private ArrayList<Card> playMat = new ArrayList<Card>();
 	
-	private Mine m = new Mine(1,3);
-	private Farm f = new Farm(1,3);
+	private Mine m = new Mine(1,2);
+	private Farm f = new Farm(1,2);
 	private Lab l = new Lab(1,3);
 	private Temple t = new Temple(1,1,3);
 	
