@@ -6,16 +6,10 @@ public class Temple extends BuildingCard {
 	private int culturePerWorker = 0;
 	private int happinessPerWorker = 0;
 
-	public Temple(int culture, int happy, int cost){
-		super(cost);
+	public Temple(int culture, int happy, int cost, String name, int scienceCost){
+		super(cost, name, scienceCost);
 		culturePerWorker = culture;
 		happinessPerWorker = happy;
-	}
-
-	@Override
-	public Item[] preRequisites() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	@Override

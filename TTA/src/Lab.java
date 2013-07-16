@@ -5,17 +5,11 @@ public class Lab extends BuildingCard {
 
 	private int sciencePerWorker = 0;
 
-	public Lab(int science, int cost){
-		super(cost);
+	public Lab(int science, int cost, String name, int scienceCost){
+		super(cost, name, scienceCost);
 		sciencePerWorker = science;
 	}
 
-	@Override
-	public Item[] preRequisites() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	@Override
 	public Card afterUsage() {
 		// TODO Auto-generated method stub

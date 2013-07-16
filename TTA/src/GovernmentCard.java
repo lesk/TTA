@@ -6,7 +6,8 @@ public class GovernmentCard extends Card {
 	private int whiteActions = 0;
 	private int redActions = 0;
 	
-	public GovernmentCard(int white, int red){
+	public GovernmentCard(int white, int red, String name){
+		super(name);
 		whiteActions = white;
 		redActions = red;
 	}
@@ -41,6 +42,12 @@ public class GovernmentCard extends Card {
 			result.add(action);
 		}
 		return result;
+	}
+
+	@Override
+	public boolean playCard(Player player) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

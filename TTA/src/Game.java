@@ -2,34 +2,31 @@
 public class Game {
 
 	public static void main(String[] args){
-		
-		// Create initial card row
-		// Create initial event deck
-		// Create initial military deck
-		
+				
+		// Create initial card row and decks
+		CardRow cr = new CardRow(4);
+
 		// Create players
 		Player player1 = new Player(1);
 		Player player2 = new Player(2);
 		Player player3 = new Player(3);
 		Player player4 = new Player(4);
 		
-		CardRow cr = new CardRow(4);
-
 		// while cards available
-		for (int i=0; i< 9; i++){
+		for (int i=1; i< 9; i++){
+			System.out.println("Turn # " + i);
 			player1.doTurn();
-			cr.refill(); 
+			CardRow.refill(); 
 			player2.doTurn();
-			cr.refill(); 
+			CardRow.refill(); 
 			player3.doTurn();
-			cr.refill(); 
+			CardRow.refill(); 
 			player4.doTurn();
-			cr.refill(); 
+			if (CardRow.refill()) break;
 		}
 
-		player1.doTurn();
-
 		// empty event deck
+		// TODO : last age plus event scoring
 
 		System.out.println("Player1 = " + player1);
 		System.out.println("Player2 = " + player2);

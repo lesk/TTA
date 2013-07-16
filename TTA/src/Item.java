@@ -1,6 +1,11 @@
 
 public class Item {
 
+	@Override
+	public String toString() {
+		return "Item [value=" + value + ", count=" + count + "]";
+	}
+
 	public enum itemTypes {
 		whiteAction,
 		redAction,
