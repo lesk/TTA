@@ -12,6 +12,10 @@ public class Player {
 	private ArrayList<Item> workerPool = new ArrayList<Item>();
 	
 	public ArrayList<Card> playMat = new ArrayList<Card>();
+	public Mine[] playedMines = new Mine[4];
+	public Farm[] playedFarms = new Farm[4];
+	public Lab[] playedLabs = new Lab[4];
+	public Temple[] playedTemples = new Temple[4];
 	
 	private Mine m = new Mine(1,2,"Bronze", 0);
 	private Farm f = new Farm(1,2,"Agriculture", 0);
@@ -50,11 +54,15 @@ public class Player {
 		m.addWorker();
 		m.addWorker();
 		playMat.add(m);
+		playedMines[0] = m;
 		f.addWorker();
 		f.addWorker();
 		playMat.add(f);
+		playedFarms[0] = f;
 
-		playMat.add(irr);   /// debug
+//		irr.addWorker(); ///debug
+//		playMat.add(irr);   /// debug
+//		playedFarms[1] = irr;  /// debug
 
 		// Create spare worker
 		workerPool.add(new Item(Item.itemTypes.worker,1));
@@ -62,9 +70,11 @@ public class Player {
 		// Create Lab (with worker)
 		l.addWorker();
 		playMat.add(l);
+		playedLabs[0] = l;
 		
 		// Create Temple (w/o worker)
 		playMat.add(t);
+		playedTemples[0] = t;
 
 		// Create Infantry
 		
@@ -79,19 +89,22 @@ public class Player {
 	
 	public void doTurn() {
 		
-		if (blueChips.count + m.resources + f.resources != 18)
-			System.out.println("breakpoint missing bluchips at start doTurn for player " + playerNumber);
+//		if (blueChips.count + m.resources + f.resources != 18)
+//			System.out.println("breakpoint missing bluchips at start doTurn for player " + playerNumber);
 		
 		performActions();
 		
-		if (blueChips.count + m.resources + f.resources != 18)
-			System.out.println("breakpoint missing bluchips after performActions for player " + playerNumber);
+//		if (blueChips.count + m.resources + f.resources != 18)
+//			System.out.println("breakpoint missing bluchips after performActions for player " + playerNumber);
 
 		doEndTurn();
 
-		if (blueChips.count + m.resources + f.resources != 18)
-			System.out.println("breakpoint missing bluchips after endturn for player " + playerNumber);
-}
+//		if (blueChips.count + m.resources + f.resources != 18)
+//			System.out.println("breakpoint missing bluchips after endturn for player " + playerNumber);
+
+		System.out.println(this);
+		System.out.println();
+	}
 
 	private void doEndTurn() {
 		
@@ -105,27 +118,35 @@ public class Player {
 		
 		addIncome(income);
 
-		ArrayList<Mine> mines = new ArrayList<Mine>();
-		ArrayList<Farm> farms = new ArrayList<Farm>();
-		for (Card c:playMat){
-			if (c instanceof ResourceCard){
-				((ResourceCard)c).produce(blueChips,population);
-				if (c instanceof Mine)
-					mines.add((Mine)c);
-				if (c instanceof Farm)
-					farms.add((Farm)c);
-			}
-		}
-		Farm.consume(farms,blueChips,population);
-		Mine.consume(mines,blueChips,population);
+//		ArrayList<Mine> mines = new ArrayList<Mine>();
+//		ArrayList<Farm> farms = new ArrayList<Farm>();
+//		for (Card c:playMat){
+//			if (c instanceof ResourceCard){
+//				((ResourceCard)c).produce(blueChips,population);
+//				if (c instanceof Mine)
+//					mines.add((Mine)c);
+//				if (c instanceof Farm)
+//					farms.add((Farm)c);
+//			}
+//		}
+		Farm.produce(playedFarms,blueChips,population);
+		Farm.consume(playedFarms,blueChips,population);
+		Mine.produce(playedMines,blueChips,population);
+		Mine.consume(playedMines,blueChips,population);
 
 		// Check pop count
 		int pop = population.count + workerPool.size();
+		int blue = blueChips.count;
 		for (Card c:playMat){
 			pop += c.workers;
+			if (c instanceof ResourceCard){
+				blue += ((ResourceCard)c).resources/((ResourceCard)c).resourcePerWorker;
+			}
 		}
 		if (pop != 24)
 			System.out.println("pop count for player " + playerNumber + " = " + pop);
+		if (blue != 18)
+			System.out.println("blue count for player " + playerNumber + " = " + blue);
 		
 		// Put new action cards into hand
 		inHand.addAll(newActionCards);
@@ -176,13 +197,14 @@ public class Player {
 	private boolean playCard() {
 		if (rand.nextInt(3) == 1 && inHand.size() > 0){
 			Card c = inHand.get(rand.nextInt(inHand.size()));
-			System.out.print("card for player " + playerNumber + " " + c);
+//			System.out.print("card for player " + playerNumber + " " + c);
 			if (c.playCard(this)) {
 				inHand.remove(c);
+				System.out.print("card for player " + playerNumber + " " + c);
 				System.out.println(" played");
 				return true;
 			}
-			System.out.println(" NOT played");
+//			System.out.println(" NOT played");
 		}
 		return false;
 	}
@@ -206,6 +228,7 @@ public class Player {
 	public boolean placeWorker(boolean urbanOnly, boolean resourceOnly) {
 
 		if (workerPool.size() > 0){
+			// TODO : get from higher level mines if possible
 			if (m.resources > 0){
 				Card c = playMat.get(rand.nextInt(playMat.size()));
 				if (c instanceof BuildingCard){
@@ -219,8 +242,8 @@ public class Player {
 						blueChips.count += b.costPerWorker;
 						workerPool.remove(0);
 						System.out.println("Added worker for player " + playerNumber + " to " + b);
-						if (blueChips.count + m.resources + f.resources != 18)
-							System.out.println("breakpoint missing bluchips after placeWorker for player " + playerNumber);
+//						if (blueChips.count + m.resources + f.resources != 18)
+//							System.out.println("breakpoint missing bluchips after placeWorker for player " + playerNumber);
 						return true;
 					}
 				}
@@ -251,6 +274,7 @@ public class Player {
 	}
 
 	public boolean buildWorker() {
+		if (workerPool.size() > 1) return false;
 		int buildCost = 2;
 		if (population.count <= 4){
 			buildCost = 7;
@@ -262,14 +286,16 @@ public class Player {
 			buildCost = 3;
 		}
 
+		/////todo: need to get from higher level farms if possible????
 		if (f.resources >= buildCost && population.count > 0){
 			if (rand.nextBoolean()){
 				workerPool.add(new Item(Item.itemTypes.worker,1));
 				f.resources -= buildCost;
 				blueChips.count += buildCost;
 				population.count--;
-				if (blueChips.count + m.resources + f.resources != 18)
-					System.out.println("breakpoint missing bluchips after buildWorker for player " + playerNumber);
+//				if (blueChips.count + m.resources + f.resources != 18)
+//					System.out.println("breakpoint missing bluchips after buildWorker for player " + playerNumber);
+				System.out.println("Built worker for player " + playerNumber);
 				return true;
 			}
 		}

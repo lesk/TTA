@@ -28,4 +28,15 @@ public class Temple extends BuildingCard {
 		return result;
 	}
 
+	@Override
+	public boolean playCard(Player player) {
+		if (super.playCard(player)){
+			if (name.equals("Religion")) player.playedTemples[0] = this;
+			else if (name.equals("Theology")) player.playedTemples[1] = this;
+			else if (name.equals("Organized Religion")) player.playedTemples[2] = this;
+			else if (name.equals("NoLevelExists")) player.playedTemples[3] = this;
+			return true;
+		}
+		return false;
+	}
 }

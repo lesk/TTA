@@ -1,16 +1,17 @@
 import java.util.ArrayList;
 
 
-
 public class Farm extends ResourceCard {
 
-	private int resourcePerWorker = 0;
-
 	public Farm(int size, int cost, String name, int scienceCost) {
-		super(cost, name, scienceCost);
-		resourcePerWorker = size;
+		super(size, cost, name, scienceCost);
 	}
 
+	public static void produce(Farm[] farms, Item blueChips, Item population) {
+		for (Farm f:farms){
+			if (f != null) f.produce(blueChips, population);
+		}
+	}
 	public void produce(Item blueChips, Item population) {
 		resources = resources + Math.min(workers, blueChips.count) * resourcePerWorker;
 		blueChips.count -= Math.min(workers, blueChips.count);
@@ -20,12 +21,12 @@ public class Farm extends ResourceCard {
 		while (resourceCount > 0 && resources > 0){
 			resourceCount -= resourcePerWorker;
 			blueChips.count++;
-			resources--;
+			resources -= resourcePerWorker;
 		}
 		return resourceCount;
 	}
 
-	public static void consume(ArrayList<Farm> farms, Item blueChips, Item population) {
+	public static void consume(Farm[] farms, Item blueChips, Item population) {
 		int resourceCount = 0;
 		if (population.count <= 0){
 			System.out.println("pop -ve breakpoint");
@@ -42,16 +43,16 @@ public class Farm extends ResourceCard {
 			resourceCount = 1;
 		}
 
-		Farm a = null;
-		Farm i = null;
-		Farm s = null;
-		Farm m = null;
-		for (Farm f:farms){
-			if (f.name.equals("Agriculture")) a = f;
-			else if (f.name.equals("Irrigation")) i = f;
-			else if (f.name.equals("Selective Breeding")) s = f;
-			else if (f.name.equals("Mech Agriculture")) m = f;
-		}
+		Farm a = farms[0];
+		Farm i = farms[1];
+		Farm s = farms[2];
+		Farm m = farms[3];
+//		for (Farm f:farms){
+//			if (f.name.equals("Agriculture")) a = f;
+//			else if (f.name.equals("Irrigation")) i = f;
+//			else if (f.name.equals("Selective Breeding")) s = f;
+//			else if (f.name.equals("Mech Agriculture")) m = f;
+//		}
 
 		if (a != null && resourceCount > 0) {
 			resourceCount = a.consume(blueChips, population, resourceCount);
@@ -71,7 +72,17 @@ public class Farm extends ResourceCard {
 			a.resources -= resourceCount;
 			blueChips.count += resourceCount;
 		}
-
 	}
 
+	@Override
+	public boolean playCard(Player player) {
+		if (super.playCard(player)){
+			if (name.equals("Agriculture")) player.playedFarms[0] = this;
+			else if (name.equals("Irrigation")) player.playedFarms[1] = this;
+			else if (name.equals("Selective Breeding")) player.playedFarms[2] = this;
+			else if (name.equals("Mech Agriculture")) player.playedFarms[3] = this;
+			return true;
+		}
+		return false;
+	}
 }

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 public abstract class ResourceCard extends BuildingCard {
 
 	public int resources = 0;
+	public int resourcePerWorker = 0;
 
-	public ResourceCard(int cost, String name, int scienceCost){
+	public ResourceCard(int size, int cost, String name, int scienceCost){
 		super(cost, name, scienceCost);
+		resourcePerWorker = size;
 	}
 
 	@Override
@@ -25,5 +27,5 @@ public abstract class ResourceCard extends BuildingCard {
 		blueChips.count -= Math.min(resource.count, blueChips.count);
 	}
 
-	public abstract void produce(Item blueChips, Item population);
+//	public abstract void produce(Item blueChips, Item population);
 }

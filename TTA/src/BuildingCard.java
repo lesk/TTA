@@ -21,11 +21,11 @@ public abstract class BuildingCard extends Card {
 
 	@Override
 	public boolean playCard(Player player) {
-//		if (player.scienceTotal > science){
-//			player.playMat.add(this);
-//			player.scienceTotal -= science;
-//			return true;
-//		}
+		if (player.scienceTotal > science){
+			player.playMat.add(this);
+			player.scienceTotal -= science;
+			return true;
+		}
 		return false;
 	}
 

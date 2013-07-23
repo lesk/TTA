@@ -26,4 +26,15 @@ public class Lab extends BuildingCard {
 		return result;
 	}
 
+	@Override
+	public boolean playCard(Player player) {
+		if (super.playCard(player)){
+			if (name.equals("Philosophy")) player.playedLabs[0] = this;
+			else if (name.equals("Alchemy")) player.playedLabs[1] = this;
+			else if (name.equals("Scientific Method")) player.playedLabs[2] = this;
+			else if (name.equals("Computers")) player.playedLabs[3] = this;
+			return true;
+		}
+		return false;
+	}
 }
